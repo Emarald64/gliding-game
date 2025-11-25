@@ -10,7 +10,7 @@ size = Vector2(128, 128)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(545, 461)
-scale = Vector2(5.6687007, 1.0294418)
+scale = Vector2(18, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
 texture = ExtResource("1_jjgbg")
@@ -20,3 +20,9 @@ shape = SubResource("RectangleShape2D_bo1nx")
 
 [node name="Player" parent="." instance=ExtResource("2_bo1nx")]
 position = Vector2(511, 203)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+limit_enabled = false
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true

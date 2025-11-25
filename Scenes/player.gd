@@ -1,14 +1,17 @@
 extends CharacterBody2D
 
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-const angleChangeFactor=1000
-const StableGlideAngle=PI/6
-const maxGlideSpeed=1500
+const MaxWalkSpeed = 400
+const WalkAccel=1000
+const JUMP_VELOCITY = -600.0
+
+#Gliding
+const angleChangeFactor=500
+const StableGlideAngle=PI/12
+const maxGlideSpeed=1000
 const minGlideSpeed=75
-const glideAccel=300
-const glideDeccel=500
+const glideAccel=700
+const glideDecel=700
 
 var glideSpeed:=0.0
 var glideAngle:=0.0
@@ -27,6 +30,8 @@ func _physics_process(delta: float) -> void:
 			var maxAngleChange=delta * angleChangeFactor / glideSpeed
 			
 			var target_angle=StableGlideAngle+Input.get_axis("glide_up","glide_down")
+			if target_angle<StableGlideAngle and is_equal_approx(glideSpeed,minGlideSpeed):
+				target_angle=StableGlideAngle
 			glideAngle=move_toward(glideAngle,target_angle,maxAngleChange)
 			
 			if glideAngle>StableGlideAngle:
@@ -36,7 +41,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				# Gliding up, Slow down
 				$DebugGlideAngle.default_color=Color.RED
-				glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDeccel*(glideAngle-StableGlideAngle))
+				glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDecel*(glideAngle-StableGlideAngle))
 			velocity=Vector2.from_angle(glideAngle)*glideSpeed
 			if not facingRight:
 				velocity.x*=-1
@@ -71,6 +76,8 @@ func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	if not gliding:
 		facingRight=direction>0
-		velocity.x = direction * SPEED * (0.1 if gliding else 1.0)
-
+	if direction:
+		velocity.x = clampf(velocity.x+(direction*delta*WalkAccel*(0.1 if gliding else 1.0)),-MaxWalkSpeed,MaxWalkSpeed)
+	elif not gliding:
+		velocity.x=move_toward(velocity.x,0,WalkAccel*delta)
 	move_and_slide()
