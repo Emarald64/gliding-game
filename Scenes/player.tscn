@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://da8lq01v6vb0c"]
+
+[ext_resource type="Script" uid="uid://blod3f0tdvexn" path="res://Scenes/player.gd" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://hjjlabee4pki" path="res://icon.svg" id="2_6t5aa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vgqql"]
+size = Vector2(64, 64)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_cvnsp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vgqql")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_6t5aa")
+
+[node name="DebugGlideSpeed" type="Label" parent="."]
+offset_left = -19.0
+offset_top = 37.0
+offset_right = 21.0
+offset_bottom = 60.0
+
+[node name="DebugGlideAngle" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 0)
