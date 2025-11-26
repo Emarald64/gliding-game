@@ -33,19 +33,22 @@ func _physics_process(delta: float) -> void:
 			# Glide movement
 			var maxAngleChange=delta * angleChangeFactor / glideSpeed
 			
-			var target_angle=StableGlideAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange)
-			if target_angle<StableGlideAngle and is_equal_approx(glideSpeed,minGlideSpeed):
+			var boost=getGlideBoostAmmount()
+			if boost!=0:print("boost:"+str(boost))
+			
+			var target_angle=-(boost/10)+StableGlideAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange)
+			if target_angle<StableGlideAngle and is_equal_approx(glideSpeed,minGlideSpeed) and boost<=1:
 				target_angle=StableGlideAngle
 			glideAngle=move_toward(glideAngle,target_angle,maxAngleChange)
 			
-			if glideAngle>StableGlideAngle:
+			if (glideAngle>StableGlideAngle+(boost/10 ))==(boost<=1):
 				# Gliding down, Speed up
 				$DebugGlideAngle.default_color=Color.WEB_GREEN
-				glideSpeed=minf(maxGlideSpeed,glideSpeed+delta*glideAccel*(glideAngle-StableGlideAngle))
+				glideSpeed=minf(maxGlideSpeed,glideSpeed+delta*glideAccel*(glideAngle-StableGlideAngle)*(1-boost))
 			else:
 				# Gliding up, Slow down
 				$DebugGlideAngle.default_color=Color.RED
-				glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDecel*(glideAngle-StableGlideAngle))
+				glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDecel*(glideAngle-StableGlideAngle)*(1-boost))
 			velocity=Vector2.from_angle(glideAngle)*glideSpeed
 			if not facingRight:
 				velocity.x*=-1
@@ -63,14 +66,14 @@ func _physics_process(delta: float) -> void:
 				canGlide=false
 		else:
 			# Fall
-			if Input.is_action_just_pressed("glide") and canGlide:
+			if Input.is_action_just_pressed("glide"):# and canGlide:
 				#Start Glide
 				$Sprite2D.scale*=GlideSpriteScale
 				$CollisionShape2D.shape.size*=GlideSpriteScale
 				gliding=true
 				glideSpeed=velocity.length()
 				glideAngle=clampf(fmod(velocity.angle(),PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
-			velocity.y+=1000*delta
+			velocity.y+=(1000-getGlideBoostAmmount()*200)*delta
 	else:
 		# On ground
 		if gliding:
@@ -101,3 +104,10 @@ func stopGlide()->void:
 	$Sprite2D.scale/=GlideSpriteScale
 	$CollisionShape2D.shape.size/=GlideSpriteScale
 	gliding=false
+	
+func getGlideBoostAmmount()->float:
+	if $GlideBoostDetector.has_overlapping_areas():
+		var booster=$GlideBoostDetector.get_overlapping_areas()[0]
+		assert(booster is GlideBooster)
+		return booster.boost
+	return 0

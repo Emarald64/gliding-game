@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://b0af8ukty010e"]
+[gd_scene load_steps=6 format=4 uid="uid://b0af8ukty010e"]
 
 [ext_resource type="Texture2D" uid="uid://doh3q2uvw10ld" path="res://Assets/spritesheet-tiles-default.png" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://da8lq01v6vb0c" path="res://Scenes/player.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://4uyh6h8qxsii" path="res://Scenes/glide_booster.tscn" id="3_8gbba"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jjvhh"]
 texture = ExtResource("2_8gbba")
@@ -176,3 +177,6 @@ tile_set = SubResource("TileSet_kry3j")
 
 [node name="StartPoint" type="Node2D" parent="."]
 position = Vector2(187, 346)
+
+[node name="GlideBooster" parent="." instance=ExtResource("3_8gbba")]
+position = Vector2(654, 285)

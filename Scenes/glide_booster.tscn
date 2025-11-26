@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://4uyh6h8qxsii"]
+
+[ext_resource type="Script" uid="uid://crj6xlcl5ymh3" path="res://Scenes/glide_booster.gd" id="1_l4gy8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
+size = Vector2(512, 512)
+
+[sub_resource type="Curve" id="Curve_l4gy8"]
+_data = [Vector2(0, 0.10418975), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_8r8se"]
+_data = [Vector2(0.01123596, 1), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[node name="GlideBooster" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_l4gy8")
+metadata/boostAmmount = 1.5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bo1nx")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 16
+emission_shape = 3
+emission_rect_extents = Vector2(1, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+split_scale = true
+scale_curve_x = SubResource("Curve_l4gy8")
+scale_curve_y = SubResource("Curve_8r8se")
