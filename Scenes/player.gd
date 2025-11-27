@@ -3,18 +3,24 @@ extends CharacterBody2D
 
 const MaxWalkSpeed = 400
 const WalkAccel=2000
-const JUMP_VELOCITY = -600.0
 
 #Gliding
-const angleChangeFactor=500
+const angleChangeFactor=750
 const StableGlideAngle=PI/12
 const maxGlideSpeed=1000
-const minGlideSpeed=75
+const minGlideSpeed=150
 const glideAccel=500
-const glideDecel=700
+const glideDecel=500
 const HalfAngleRange=0.5
-
+const GlideBoostAngleChangeFactor=StableGlideAngle
 const GlideSpriteScale=Vector2(1.5,0.75)
+
+const maxJumpTime:=0.125
+const JUMP_VELOCITY = -300.0
+
+var hasjumped:=false
+var jumpTime:=0.0
+var coyoteStarted:=false
 
 @onready var baseSpriteScale=$Sprite2D.scale.x
 
@@ -36,12 +42,12 @@ func _physics_process(delta: float) -> void:
 			var boost=getGlideBoostAmmount()
 			if boost!=0:print("boost:"+str(boost))
 			
-			var target_angle=-(boost/10)+StableGlideAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange)
+			var target_angle=-(boost*GlideBoostAngleChangeFactor)+StableGlideAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange)
 			if target_angle<StableGlideAngle and is_equal_approx(glideSpeed,minGlideSpeed) and boost<=1:
 				target_angle=StableGlideAngle
 			glideAngle=move_toward(glideAngle,target_angle,maxAngleChange)
 			
-			if (glideAngle>StableGlideAngle+(boost/10 ))==(boost<=1):
+			if (glideAngle>StableGlideAngle+(boost*GlideBoostAngleChangeFactor))==(boost<=1):
 				# Gliding down, Speed up
 				$DebugGlideAngle.default_color=Color.WEB_GREEN
 				glideSpeed=minf(maxGlideSpeed,glideSpeed+delta*glideAccel*(glideAngle-StableGlideAngle)*(1-boost))
@@ -58,9 +64,10 @@ func _physics_process(delta: float) -> void:
 			if not facingRight:
 				anglePoint.x*=-1
 			$DebugGlideAngle.set_point_position(1,anglePoint)
-			#print(glideAngle)
+			#print("glideAngle"+str(glideAngle))
+			#print("stableAngle"+str(StableGlideAngle+(boost*GlideBoostAngleChangeFactor)))
 			
-			if not Input.is_action_pressed('glide'):
+			if not Input.is_action_pressed('glide') or is_on_wall():
 				#End Glide
 				stopGlide()
 				canGlide=false
@@ -72,15 +79,30 @@ func _physics_process(delta: float) -> void:
 				$CollisionShape2D.shape.size*=GlideSpriteScale
 				gliding=true
 				glideSpeed=velocity.length()
-				glideAngle=clampf(fmod(velocity.angle(),PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
-			velocity.y+=(1000-getGlideBoostAmmount()*200)*delta
+				glideAngle=clampf(absf(velocity.angle()+PI/2)-(PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
+			velocity.y+=(1000-(getGlideBoostAmmount()*200))*delta
+			if not coyoteStarted:
+				$coyoteTimer.start()
+				coyoteStarted=true
 	else:
 		# On ground
 		if gliding:
 			stopGlide()
 		canGlide=true
-		if Input.is_action_just_pressed("jump"):
-			velocity.y = JUMP_VELOCITY
+		coyoteStarted=false
+		hasjumped=false
+	
+	#Jump
+	if ((Input.is_action_pressed("jump") and jumpTime<maxJumpTime) or (Input.is_action_just_pressed("jump") and (not $coyoteTimer.is_stopped() or is_on_floor()))):
+		$coyoteTimer.stop()
+		if not hasjumped:
+			jumpTime=0.0
+		var jump=JUMP_VELOCITY*((1.0 if not hasjumped and Input.is_action_just_pressed("jump") else 0.0) + (delta*10) if jumpTime+delta<maxJumpTime else (maxJumpTime-jumpTime)*10)
+		#print(velocity.y+jump)
+		velocity.y=min(velocity.y+jump,jump)
+		jumpTime+=delta
+
+		hasjumped=true
 	
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
