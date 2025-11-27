@@ -120,6 +120,7 @@ func _physics_process(delta: float) -> void:
 func respawn()->void:
 	global_position=checkpoint.global_position
 	velocity=Vector2.ZERO
+	$Camera2D.add_trauma(0.2)
 	if gliding:stopGlide()
 
 func stopGlide()->void:
