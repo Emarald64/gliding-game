@@ -5,13 +5,13 @@ const MaxWalkSpeed = 400
 const WalkAccel=2000
 
 #Gliding
-const angleChangeFactor=750
+const angleChangeFactor=50
 const StableGlideAngle=PI/12
 const maxGlideSpeed=1000
 const minGlideSpeed=150
-const glideAccel=500
+const glideAccel=700
 const glideDecel=500
-const HalfAngleRange=0.5
+const HalfAngleRange=PI/5
 const GlideBoostAngleChangeFactor=StableGlideAngle
 const GlideSpriteScale=Vector2(1.5,0.75)
 
@@ -37,7 +37,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		if gliding:
 			# Glide movement
-			var maxAngleChange=delta * angleChangeFactor / glideSpeed
+			var maxAngleChange=delta * angleChangeFactor / sqrt(glideSpeed)
 			
 			var boost=getGlideBoostAmmount()
 			if boost!=0:print("boost:"+str(boost))
@@ -73,7 +73,7 @@ func _physics_process(delta: float) -> void:
 				canGlide=false
 		else:
 			# Fall
-			if Input.is_action_just_pressed("glide"):# and canGlide:
+			if Input.is_action_just_pressed("glide") and canGlide:
 				#Start Glide
 				$Sprite2D.scale*=GlideSpriteScale
 				$CollisionShape2D.shape.size*=GlideSpriteScale
