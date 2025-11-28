@@ -1,10 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://da8lq01v6vb0c"]
+[gd_scene load_steps=6 format=3 uid="uid://da8lq01v6vb0c"]
 
 [ext_resource type="Script" uid="uid://blod3f0tdvexn" path="res://Scenes/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://hjjlabee4pki" path="res://icon.svg" id="2_6t5aa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vgqql"]
 size = Vector2(64, 64)
+
+[sub_resource type="Curve" id="Curve_cvnsp"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.5007113), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_cvnsp"]
+colors = PackedColorArray(0.2145, 0.46053335, 0.55, 1, 0.5035, 0.83093333, 0.95, 1)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 9
@@ -18,12 +25,14 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_6t5aa")
 
 [node name="DebugGlideSpeed" type="Label" parent="."]
+visible = false
 offset_left = -19.0
 offset_top = 37.0
 offset_right = 21.0
 offset_bottom = 60.0
 
 [node name="DebugGlideAngle" type="Line2D" parent="."]
+visible = false
 points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Hurtbox" type="Area2D" parent="."]
@@ -43,5 +52,14 @@ shape = SubResource("RectangleShape2D_vgqql")
 [node name="coyoteTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="Trail" type="Line2D" parent="."]
+show_behind_parent = true
+top_level = true
+z_index = -1
+width = 20.0
+width_curve = SubResource("Curve_cvnsp")
+gradient = SubResource("Gradient_cvnsp")
+end_cap_mode = 2
 
 [connection signal="body_entered" from="Hurtbox" to="." method="respawn" unbinds=1]

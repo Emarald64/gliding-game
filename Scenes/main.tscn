@@ -209,7 +209,7 @@ tile_set = SubResource("TileSet_kry3j")
 position = Vector2(187, 346)
 
 [node name="Glide Instructions" type="PanelContainer" parent="."]
-z_index = -1
+z_index = -3
 offset_left = 1535.0
 offset_top = 74.0
 offset_right = 1761.0

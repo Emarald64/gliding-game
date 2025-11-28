@@ -18,6 +18,8 @@ const GlideSpriteScale=Vector2(1.5,0.75)
 const maxJumpTime:=0.125
 const JUMP_VELOCITY = -300.0
 
+const TrailLength=20
+
 var hasjumped:=false
 var jumpTime:=0.0
 var coyoteStarted:=false
@@ -107,6 +109,10 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
 	
+	if $Trail.get_point_count()>TrailLength:
+		$Trail.remove_point(TrailLength)
+	$Trail.add_point(global_position,0)
+	
 	var direction := Input.get_axis("move_left", "move_right")
 	if not gliding:
 		if direction:
@@ -121,6 +127,7 @@ func respawn()->void:
 	global_position=checkpoint.global_position
 	velocity=Vector2.ZERO
 	$Camera2D.add_trauma(0.3)
+	resetTrail()
 	if gliding:stopGlide()
 
 func stopGlide()->void:
@@ -134,3 +141,6 @@ func getGlideBoostAmmount()->float:
 		assert(booster is GlideBooster)
 		return booster.boost
 	return 0
+
+func resetTrail()->void:
+	$Trail.clear_points()
