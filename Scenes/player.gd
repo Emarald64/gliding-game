@@ -44,7 +44,7 @@ var deathCount:=0
 @onready var checkpoint:Node2D=get_node('../StartPoint')
 
 func _physics_process(delta: float) -> void:
-	print(delta)
+	#print(delta)
 	if not is_on_floor():
 		if gliding:
 			glideTime+=delta
@@ -84,7 +84,7 @@ func _physics_process(delta: float) -> void:
 			if not Input.is_action_pressed('glide') or is_on_wall():
 				#End Glide
 				stopGlide()
-				canGlide=false
+				#canGlide=false
 		else:
 			# Fall
 			if Input.is_action_just_pressed("glide") and canGlide:
@@ -119,6 +119,7 @@ func _physics_process(delta: float) -> void:
 		jumpTime+=delta
 
 		hasjumped=true
+	else:jumpTime=maxJumpTime
 	
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
