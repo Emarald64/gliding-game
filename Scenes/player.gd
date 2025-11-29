@@ -33,6 +33,8 @@ var gliding=false
 var canGlide=false
 var facingRight:=true
 
+var deathCount:=0
+
 @onready var checkpoint:Node2D=get_node('../StartPoint')
 
 func _physics_process(delta: float) -> void:
@@ -118,9 +120,9 @@ func _physics_process(delta: float) -> void:
 		if direction:
 			$Sprite2D.scale.x=baseSpriteScale*signf(direction)
 			facingRight=direction>0
-			velocity.x = clampf(velocity.x+(direction*delta*WalkAccel*(0.1 if gliding else 1.0)*(2 if signf(velocity.x) != signf(direction) else 1)),-MaxWalkSpeed,MaxWalkSpeed)
+			velocity.x = clampf(velocity.x+(direction*delta*WalkAccel*(1.0 if is_on_floor() else 0.5)*(2 if signf(velocity.x) != signf(direction) else 1)),-MaxWalkSpeed,MaxWalkSpeed)
 		else:
-			velocity.x=move_toward(velocity.x,0,WalkAccel*delta*2)
+			velocity.x=move_toward(velocity.x,0,WalkAccel*delta*(2 if is_on_floor() else 1))
 	move_and_slide()
 
 func respawn()->void:
@@ -128,6 +130,7 @@ func respawn()->void:
 	velocity=Vector2.ZERO
 	$Camera2D.add_trauma(0.3)
 	resetTrail()
+	deathCount+=1
 	if gliding:stopGlide()
 
 func stopGlide()->void:
