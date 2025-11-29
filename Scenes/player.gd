@@ -17,7 +17,11 @@ const GlideSpriteScale=Vector2(1.5,0.75)
 const StableGlideTime=3.0
 
 const maxJumpTime:=0.125
+const JUMP_ACCEL:=-3000.0
 const JUMP_VELOCITY = -300.0
+
+const FallAccel:=1000.0
+const MaxFallSpeed:=1500.0
 
 const TrailLength=20
 
@@ -40,6 +44,7 @@ var deathCount:=0
 @onready var checkpoint:Node2D=get_node('../StartPoint')
 
 func _physics_process(delta: float) -> void:
+	print(delta)
 	if not is_on_floor():
 		if gliding:
 			glideTime+=delta
@@ -73,7 +78,7 @@ func _physics_process(delta: float) -> void:
 			if not facingRight:
 				anglePoint.x*=-1
 			$DebugGlideAngle.set_point_position(1,anglePoint)
-			print("glideAngle"+str(currentStableAngle))
+			#print("glideAngle"+str(currentStableAngle))
 			#print("stableAngle"+str(StableGlideAngle+(boost*GlideBoostAngleChangeFactor)))
 			
 			if not Input.is_action_pressed('glide') or is_on_wall():
@@ -91,7 +96,7 @@ func _physics_process(delta: float) -> void:
 				glideAngle=clampf(absf(velocity.angle()+PI/2)-(PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
 				canGlide=false
 				glideTime=0.0
-			velocity.y+=(1000-(getGlideBoostAmmount()*200))*delta
+			velocity.y=minf(velocity.y+((1000-(getGlideBoostAmmount()*200))*delta),MaxFallSpeed)
 			if not coyoteStarted:
 				$coyoteTimer.start()
 				coyoteStarted=true
@@ -108,19 +113,15 @@ func _physics_process(delta: float) -> void:
 		$coyoteTimer.stop()
 		if not hasjumped:
 			jumpTime=0.0
-		var jump=JUMP_VELOCITY*((1.0 if not hasjumped and Input.is_action_just_pressed("jump") else 0.0) + (delta*10) if jumpTime+delta<maxJumpTime else (maxJumpTime-jumpTime)*10)
+		var jump=(JUMP_VELOCITY if not hasjumped and Input.is_action_just_pressed("jump") else 0.0) + (delta*JUMP_ACCEL) if jumpTime+delta<maxJumpTime else (maxJumpTime-jumpTime)*JUMP_ACCEL
 		#print(velocity.y+jump)
-		velocity.y=min(velocity.y+jump,jump)
+		velocity.y=minf(velocity.y,0)+jump
 		jumpTime+=delta
 
 		hasjumped=true
 	
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
-	
-	if $Trail.get_point_count()>TrailLength:
-		$Trail.remove_point(TrailLength)
-	$Trail.add_point(global_position,0)
 	
 	var direction := Input.get_axis("move_left", "move_right")
 	if not gliding:
@@ -131,6 +132,10 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x=move_toward(velocity.x,0,WalkAccel*delta*(2 if is_on_floor() else 1))
 	move_and_slide()
+	
+	if $Trail.get_point_count()>TrailLength:
+		$Trail.remove_point(TrailLength)
+	$Trail.add_point(global_position,0)
 
 func respawn()->void:
 	global_position=checkpoint.global_position
