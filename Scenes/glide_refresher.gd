@@ -8,6 +8,6 @@ func collected(player: Node2D) -> void:
 	$RespawnTimer.start()
 
 
-func respawn() -> void:
+func refresh() -> void:
 	monitoring=true
 	show()

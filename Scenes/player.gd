@@ -114,7 +114,7 @@ func _physics_process(delta: float) -> void:
 		if not hasjumped:
 			jumpTime=0.0
 		var jump=(JUMP_VELOCITY if not hasjumped and Input.is_action_just_pressed("jump") else 0.0) + (delta*JUMP_ACCEL) if jumpTime+delta<maxJumpTime else (maxJumpTime-jumpTime)*JUMP_ACCEL
-		#print(velocity.y+jump)
+		print(jump)
 		velocity.y=minf(velocity.y,0)+jump
 		jumpTime+=delta
 
@@ -144,6 +144,7 @@ func respawn()->void:
 	$Camera2D.add_trauma(0.3)
 	resetTrail()
 	deathCount+=1
+	get_tree().call_group('refreshOnDeath','refresh')
 	if gliding:stopGlide()
 
 func stopGlide()->void:
