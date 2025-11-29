@@ -25,14 +25,12 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_6t5aa")
 
 [node name="DebugGlideSpeed" type="Label" parent="."]
-visible = false
 offset_left = -19.0
 offset_top = 37.0
 offset_right = 21.0
 offset_bottom = 60.0
 
 [node name="DebugGlideAngle" type="Line2D" parent="."]
-visible = false
 points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Hurtbox" type="Area2D" parent="."]

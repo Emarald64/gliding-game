@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://b0af8ukty010e"]
+[gd_scene load_steps=26 format=4 uid="uid://b0af8ukty010e"]
 
 [ext_resource type="Texture2D" uid="uid://doh3q2uvw10ld" path="res://Assets/spritesheet-tiles-default.png" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://da8lq01v6vb0c" path="res://Scenes/player.tscn" id="2_bo1nx"]
@@ -191,6 +191,9 @@ corner_radius_bottom_left = 10
 atlas = ExtResource("5_21xkr")
 region = Rect2(840, 272, 48, 32)
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_jkdf5"]
+size = Vector2(32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_344ge"]
 atlas = ExtResource("5_21xkr")
 region = Rect2(840, 904, 48, 48)
@@ -198,6 +201,18 @@ region = Rect2(840, 904, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
 atlas = ExtResource("5_21xkr")
 region = Rect2(200, 840, 48, 48)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jkdf5"]
+blend_mode = 3
+
+[sub_resource type="Gradient" id="Gradient_wsu2k"]
+colors = PackedColorArray(1, 1, 1, 1, 0.35, 0.35, 0.35, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k12tt"]
+gradient = SubResource("Gradient_wsu2k")
+width = 1536
+height = 600
+fill_to = Vector2(0, 1)
 
 [node name="main" type="Node"]
 
@@ -246,6 +261,46 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = " in the air to glide!"
 metadata/_edit_lock_ = true
+
+[node name="Glide Instructions3" type="PanelContainer" parent="."]
+offset_left = 4110.0
+offset_top = 784.0
+offset_right = 4658.0
+offset_bottom = 867.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_6bp64")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Glide Instructions3"]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Glide Instructions3/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "After 3 seconds, your glide angle will decrease."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Glide Instructions3/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label2" type="Label" parent="Glide Instructions3/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Grabbing  "
+
+[node name="TextureRect" type="TextureRect" parent="Glide Instructions3/VBoxContainer/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("PlaceholderTexture2D_jkdf5")
+
+[node name="Label" type="Label" parent="Glide Instructions3/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = " will refresh your dash time and "
+
+[node name="Label2" type="Label" parent="Glide Instructions3/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "allow you dash again midair"
 
 [node name="Glide Instructions2" type="PanelContainer" parent="."]
 offset_left = 2520.0
@@ -329,7 +384,6 @@ repeat_times = 3
 texture = ExtResource("11_d1ilt")
 
 [node name="Parallax2D" type="Parallax2D" parent="."]
-modulate = Color(0.82, 0.82, 0.82, 1)
 z_index = -10
 scroll_scale = Vector2(0.5, 0.5)
 scroll_offset = Vector2(0, 100)
@@ -337,14 +391,21 @@ repeat_size = Vector2(1536, 0)
 repeat_times = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D"]
+clip_children = 2
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("6_hptm8")
 centered = false
 
+[node name="Sprite2D8" type="Sprite2D" parent="Parallax2D/Sprite2D"]
+material = SubResource("CanvasItemMaterial_jkdf5")
+scale = Vector2(0.6666667, 0.6666667)
+texture = SubResource("GradientTexture2D_k12tt")
+centered = false
+
 [node name="Sprite2D2" type="Sprite2D" parent="Parallax2D"]
-position = Vector2(1104.9999, -19.000055)
+position = Vector2(1104.9999, -19.000053)
 rotation = 0.36115956
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.49999997, 0.49999997)
 texture = ExtResource("7_hptm8")
 
 [node name="Sprite2D3" type="Sprite2D" parent="Parallax2D"]
@@ -360,7 +421,7 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("9_6iyac")
 
 [node name="Sprite2D4" type="Sprite2D" parent="Parallax2D"]
-position = Vector2(105.00003, -34.999996)
+position = Vector2(105.00003, -35)
 rotation = -0.0070846975
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("9_6iyac")
@@ -368,7 +429,7 @@ texture = ExtResource("9_6iyac")
 [node name="Sprite2D5" type="Sprite2D" parent="Parallax2D"]
 position = Vector2(1303, 83.000015)
 rotation = 0.2400295
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.49999997, 0.49999997)
 texture = ExtResource("10_fdnlq")
 
 [node name="Sprite2D6" type="Sprite2D" parent="Parallax2D"]
@@ -401,4 +462,4 @@ offset_bottom = 700.0
 color = Color(0.7176471, 0.90588236, 0.98039216, 1)
 
 [connection signal="body_entered" from="TileMapLayer/Checkpoint" to="TileMapLayer/Checkpoint" method="activate"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@36090" to="TileMapLayer/@Area2D@36090" method="activate"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@41642" to="TileMapLayer/@Area2D@41642" method="activate"]
