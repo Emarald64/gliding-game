@@ -1,9 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://4uyh6h8qxsii"]
+[gd_scene load_steps=7 format=3 uid="uid://4uyh6h8qxsii"]
 
 [ext_resource type="Script" uid="uid://crj6xlcl5ymh3" path="res://Scenes/glide_booster.gd" id="1_l4gy8"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
-size = Vector2(512, 512)
 
 [sub_resource type="Curve" id="Curve_l4gy8"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0]
@@ -38,8 +35,9 @@ collision_mask = 0
 script = ExtResource("1_l4gy8")
 metadata/boostAmmount = 1.5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_bo1nx")
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.53999996, 1, 0.95399994, 0.58431375)
+invert_border = 0.1
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 amount = 16

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://doh3q2uvw10ld" path="res://Assets/spritesheet-tiles-default.png" id="2_1w5vy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7tg8b"]
-size = Vector2(64, 42)
+size = Vector2(64, 44)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_77tl1"]
 atlas = ExtResource("2_1w5vy")
@@ -34,12 +34,13 @@ collision_mask = 8
 script = ExtResource("1_ynq0b")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 11)
+position = Vector2(0, 10)
 shape = SubResource("RectangleShape2D_7tg8b")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_7occl")
+autoplay = "default"
 frame = 1
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

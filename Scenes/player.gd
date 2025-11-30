@@ -5,7 +5,7 @@ const MaxWalkSpeed = 400
 const WalkAccel=2000
 
 #Gliding
-const angleChangeFactor=50
+const angleChangeFactor=2000
 const StableGlideAngle=PI/12
 const maxGlideSpeed=1000
 const minGlideSpeed=150
@@ -51,7 +51,7 @@ func _physics_process(delta: float) -> void:
 				glideTime+=delta
 				
 				# Glide movement
-				var maxAngleChange=delta * angleChangeFactor / sqrt(glideSpeed)
+				var maxAngleChange=delta * angleChangeFactor / glideSpeed
 				
 				var boost=getGlideBoostAmmount()
 				if boost!=0:print("boost:"+str(boost))
@@ -92,7 +92,7 @@ func _physics_process(delta: float) -> void:
 			if Input.is_action_just_pressed("glide") and canGlide:
 				#Start Glide
 				$Sprite2D.scale*=GlideSpriteScale
-				$CollisionShape2D.shape.size*=GlideSpriteScale
+				$Hurtbox/CollisionShape2D.shape.size*=GlideSpriteScale
 				gliding=true
 				glideSpeed=velocity.length()
 				glideAngle=clampf(absf(velocity.angle()+PI/2)-(PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
@@ -132,7 +132,7 @@ func _physics_process(delta: float) -> void:
 			$Sprite2D.scale.x=baseSpriteScale*signf(direction)
 			facingRight=direction>0
 			velocity.x = clampf(velocity.x+(direction*delta*WalkAccel*(1.0 if is_on_floor() else 0.5)*(2 if signf(velocity.x) != signf(direction) else 1)),-MaxWalkSpeed,MaxWalkSpeed)
-		else:
+		elif $LockGliding.is_stopped():
 			velocity.x=move_toward(velocity.x,0,WalkAccel*delta*(2 if is_on_floor() else 1))
 	move_and_slide()
 	
@@ -151,7 +151,7 @@ func respawn()->void:
 
 func stopGlide()->void:
 	$Sprite2D.scale/=GlideSpriteScale
-	$CollisionShape2D.shape.size/=GlideSpriteScale
+	$Hurtbox/CollisionShape2D.shape.size/=GlideSpriteScale
 	gliding=false
 	
 func getGlideBoostAmmount()->float:

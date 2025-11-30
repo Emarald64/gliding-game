@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bt3i66ybacfls" path="res://Assets/pickup.png" id="2_7uhen"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b6dbf"]
-radius = 32.0
+radius = 40.0
 
 [node name="Glide Refresher" type="Area2D" groups=["refreshOnDeath"]]
 collision_layer = 0
@@ -16,7 +16,7 @@ shape = SubResource("CircleShape2D_b6dbf")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-scale = Vector2(1.5, 1.5)
+scale = Vector2(2, 2)
 texture = ExtResource("2_7uhen")
 
 [node name="RespawnTimer" type="Timer" parent="."]
