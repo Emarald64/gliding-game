@@ -12,7 +12,7 @@ const minGlideSpeed=150
 const glideAccel=700
 const glideDecel=500
 const HalfAngleRange=PI/5
-const GlideBoostAngleChangeFactor=StableGlideAngle
+const GlideBoostAngleChangeFactor=-StableGlideAngle
 const GlideSpriteScale=Vector2(1.5,0.75)
 const StableGlideTime=3.0
 
@@ -47,37 +47,39 @@ func _physics_process(delta: float) -> void:
 	#print(delta)
 	if not is_on_floor():
 		if gliding:
-			glideTime+=delta
+			if $LockGliding.is_stopped():
+				glideTime+=delta
+				
+				# Glide movement
+				var maxAngleChange=delta * angleChangeFactor / sqrt(glideSpeed)
+				
+				var boost=getGlideBoostAmmount()
+				if boost!=0:print("boost:"+str(boost))
+				
+				var currentStableAngle=(boost*GlideBoostAngleChangeFactor)+StableGlideAngle+maxf((glideTime-StableGlideTime)*PI/12,0)
+				var target_angle=clampf(currentStableAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange),-PI/2,PI/2)
+				if target_angle<currentStableAngle and is_equal_approx(glideSpeed,minGlideSpeed) and boost<1:
+					target_angle=min(currentStableAngle,PI/2)
+				glideAngle=move_toward(glideAngle,target_angle,maxAngleChange)
+				
+				if (glideAngle>currentStableAngle+(boost*GlideBoostAngleChangeFactor))==(boost<=1):
+					# Gliding down, Speed up
+					$DebugGlideAngle.default_color=Color.WEB_GREEN
+					glideSpeed=minf(maxGlideSpeed,glideSpeed+delta*glideAccel*(glideAngle-currentStableAngle)*(1-boost))
+				else:
+					# Gliding up, Slow down
+					$DebugGlideAngle.default_color=Color.RED
+					glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDecel*(glideAngle-currentStableAngle)*(1-boost))
 			
-			# Glide movement
-			var maxAngleChange=delta * angleChangeFactor / sqrt(glideSpeed)
-			
-			var boost=getGlideBoostAmmount()
-			if boost!=0:print("boost:"+str(boost))
-			
-			var currentStableAngle=(boost*GlideBoostAngleChangeFactor)+StableGlideAngle+maxf((glideTime-StableGlideTime)*PI/12,0)
-			var target_angle=clampf(currentStableAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange),-PI/2,PI/2)
-			if target_angle<currentStableAngle and is_equal_approx(glideSpeed,minGlideSpeed) and boost<1:
-				target_angle=min(currentStableAngle,PI/2)
-			glideAngle=move_toward(glideAngle,target_angle,maxAngleChange)
-			
-			if (glideAngle>currentStableAngle+(boost*GlideBoostAngleChangeFactor))==(boost<=1):
-				# Gliding down, Speed up
-				$DebugGlideAngle.default_color=Color.WEB_GREEN
-				glideSpeed=minf(maxGlideSpeed,glideSpeed+delta*glideAccel*(glideAngle-currentStableAngle)*(1-boost))
-			else:
-				# Gliding up, Slow down
-				$DebugGlideAngle.default_color=Color.RED
-				glideSpeed=maxf(minGlideSpeed,glideSpeed+delta*glideDecel*(glideAngle-currentStableAngle)*(1-boost))
 			velocity=Vector2.from_angle(glideAngle)*glideSpeed
 			if not facingRight:
 				velocity.x*=-1
 			#Debug
-			$DebugGlideSpeed.text=str(roundf(glideTime*100)/100)
-			var anglePoint=Vector2.from_angle(currentStableAngle)*100
-			if not facingRight:
-				anglePoint.x*=-1
-			$DebugGlideAngle.set_point_position(1,anglePoint)
+			$DebugGlideSpeed.text=str(roundf(glideSpeed*100)/100)
+			#var anglePoint=Vector2.from_angle(currentStableAngle)*100
+			#if not facingRight:
+				#anglePoint.x*=-1
+			#$DebugGlideAngle.set_point_position(1,anglePoint)
 			#print("glideAngle"+str(currentStableAngle))
 			#print("stableAngle"+str(StableGlideAngle+(boost*GlideBoostAngleChangeFactor)))
 			

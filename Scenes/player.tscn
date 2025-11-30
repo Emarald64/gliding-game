@@ -31,6 +31,7 @@ offset_right = 21.0
 offset_bottom = 60.0
 
 [node name="DebugGlideAngle" type="Line2D" parent="."]
+visible = false
 points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Hurtbox" type="Area2D" parent="."]
@@ -59,5 +60,9 @@ width = 20.0
 width_curve = SubResource("Curve_cvnsp")
 gradient = SubResource("Gradient_cvnsp")
 end_cap_mode = 2
+
+[node name="LockGliding" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
 
 [connection signal="body_entered" from="Hurtbox" to="." method="respawn" unbinds=1]
