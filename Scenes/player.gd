@@ -33,7 +33,7 @@ var coyoteStarted:=false
 
 var glideSpeed:=0.0
 var glideAngle:=0.0
-var glideTime:=0.0
+#var glideTime:=0.0
 
 var gliding=false
 var canGlide=false
@@ -48,7 +48,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		if gliding:
 			if $LockGliding.is_stopped():
-				glideTime+=delta
+				#glideTime+=delta
 				
 				# Glide movement
 				var maxAngleChange=delta * angleChangeFactor / glideSpeed
@@ -56,7 +56,7 @@ func _physics_process(delta: float) -> void:
 				var boost=getGlideBoostAmmount()
 				if boost!=0:print("boost:"+str(boost))
 				
-				var currentStableAngle=(boost*GlideBoostAngleChangeFactor)+StableGlideAngle+maxf((glideTime-StableGlideTime)*PI/12,0)
+				var currentStableAngle=(boost*GlideBoostAngleChangeFactor)+StableGlideAngle
 				var target_angle=clampf(currentStableAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange),-PI/2,PI/2)
 				if target_angle<currentStableAngle and is_equal_approx(glideSpeed,minGlideSpeed) and boost<1:
 					target_angle=min(currentStableAngle,PI/2)
@@ -97,7 +97,6 @@ func _physics_process(delta: float) -> void:
 				glideSpeed=velocity.length()
 				glideAngle=clampf(absf(velocity.angle()+PI/2)-(PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
 				canGlide=false
-				glideTime=0.0
 			velocity.y=minf(velocity.y+((1000-(getGlideBoostAmmount()*200))*delta),MaxFallSpeed)
 			if not coyoteStarted:
 				$coyoteTimer.start()
