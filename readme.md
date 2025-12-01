@@ -5,6 +5,7 @@ the level "An Artificer's Accent" in the Celeste 2024 Secret Santa Collab and
 the elytra in Minecraft
 
 ## Controls
+
 * Move:arrow keys or wasd
 
 * Glide: Shift
@@ -13,7 +14,7 @@ the elytra in Minecraft
 
 * Respawn: R
 
-Tileset: (Kenney New Platformer Pack)[https://kenney.nl/assets/new-platformer-pack]
+Tileset: [Kenney New Platformer Pack](https://kenney.nl/assets/new-platformer-pack)
 
 Made with the Godot Engine
 
