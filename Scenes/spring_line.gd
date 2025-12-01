@@ -3,6 +3,7 @@ extends Node2D
 @export var springCount:=3
 @export var strength:=750
 @export var glideLockTime:=.5
+@export var springRotation:=0.0
 
 const springWidth=66
 
@@ -13,4 +14,5 @@ func _ready() -> void:
 		spring.position.x=springWidth*(i-(springCount/2.0))
 		spring.strength=strength
 		spring.glideLockTime=glideLockTime
+		spring.rotation=springRotation
 		add_child(spring)

@@ -97,6 +97,7 @@ func _physics_process(delta: float) -> void:
 				glideSpeed=velocity.length()
 				glideAngle=clampf(absf(velocity.angle()+PI/2)-(PI/2),StableGlideAngle-HalfAngleRange,StableGlideAngle+HalfAngleRange)
 				canGlide=false
+				$LockGliding.stop()
 			velocity.y=minf(velocity.y+((1000-(getGlideBoostAmmount()*200))*delta),MaxFallSpeed)
 			if not coyoteStarted:
 				$coyoteTimer.start()
@@ -105,6 +106,7 @@ func _physics_process(delta: float) -> void:
 		# On ground
 		if gliding:
 			stopGlide()
+		$LockGliding.stop()
 		canGlide=true
 		coyoteStarted=false
 		hasjumped=false
@@ -150,6 +152,7 @@ func respawn()->void:
 func stopGlide()->void:
 	$Sprite2D.scale/=GlideSpriteScale
 	$Hurtbox/CollisionShape2D.shape.size/=GlideSpriteScale
+	$LockGliding.stop()
 	gliding=false
 	
 func getGlideBoostAmmount()->float:
