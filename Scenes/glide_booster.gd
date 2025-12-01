@@ -16,7 +16,7 @@ func _ready() -> void:
 		$GPUParticles2D.process_material.initial_velocity_min=boost*ParticleSpeedFactor
 		$GPUParticles2D.lifetime=(size.y-(boost*ParticleYSizeFactor))/(boost*ParticleSpeedFactor)
 		
-		$GPUParticles2D.amount=int(24*$GPUParticles2D.lifetime)
+		$GPUParticles2D.amount=int(size.x*$GPUParticles2D.lifetime/10)
 		
 		$GPUParticles2D.process_material.scale_min=boost*ParticleYSizeFactor
 		$GPUParticles2D.process_material.scale_curve.curve_x.set_point_value(0,ParticleXSize/boost/ParticleYSizeFactor)

@@ -245,7 +245,7 @@ normal = Vector2(1, 0)
 [node name="main" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource("2_bo1nx")]
-position = Vector2(704, -736)
+position = Vector2(187, 346)
 floor_constant_speed = true
 floor_snap_length = 4.0
 
