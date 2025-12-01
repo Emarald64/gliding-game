@@ -1,14 +1,23 @@
-# Glide to the finish
+# Gliding Platformer
 
-Inspired by the level "An Artificer's Accent" in the Celeste 2024 Secret Santa Collab and
+Platformer where you glide with mechinics inspired by
+the level "An Artificer's Accent" in the Celeste 2024 Secret Santa Collab and
 the elytra in Minecraft
 
-Use arrow keys or wasd to move
+## Controls
+* Move:arrow keys or wasd
 
-Shift to glide
-and space or z to jump
+* Glide: Shift
+
+* Jump: Space or Z
+
+* Respawn: R
+
+Tileset: (Kenney New Platformer Pack)[https://kenney.nl/assets/new-platformer-pack]
 
 Made with the Godot Engine
+
+Made for Hack Club Siege Week 13 with the theme of "Winter"
 
 ## To play:
 
