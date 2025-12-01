@@ -239,7 +239,9 @@ size = Vector2(512, 300)
 [node name="main" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource("2_bo1nx")]
-position = Vector2(2720, 480)
+position = Vector2(768, 160)
+floor_constant_speed = true
+floor_snap_length = 4.0
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(0.75, 0.75)

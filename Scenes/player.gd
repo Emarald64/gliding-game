@@ -29,7 +29,7 @@ var hasjumped:=false
 var jumpTime:=0.0
 var coyoteStarted:=false
 
-@onready var baseSpriteScale=$Sprite2D.scale.x
+#@onready var baseSpriteScale=$Sprite2D.scale.x
 
 var glideSpeed:=0.0
 var glideAngle:=0.0
@@ -125,11 +125,10 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
 	
-	var direction := Input.get_axis("move_left", "move_right")
 	if not gliding:
+		var direction := Input.get_axis("move_left", "move_right")
 		if direction:
-			$Sprite2D.scale.x=baseSpriteScale*signf(direction)
-			facingRight=direction>0
+			updateFacingDir(direction>0)
 			velocity.x = clampf(velocity.x+(direction*delta*WalkAccel*(1.0 if is_on_floor() else 0.5)*(2 if signf(velocity.x) != signf(direction) else 1)),-MaxWalkSpeed,MaxWalkSpeed)
 		elif $LockGliding.is_stopped():
 			velocity.x=move_toward(velocity.x,0,WalkAccel*delta*(2 if is_on_floor() else 1))
@@ -162,3 +161,8 @@ func getGlideBoostAmmount()->float:
 
 func resetTrail()->void:
 	$Trail.clear_points()
+
+func updateFacingDir(newDir:bool):
+	if newDir!=facingRight:
+		$Sprite2D.scale.x*=-1
+		facingRight=newDir
