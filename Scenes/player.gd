@@ -54,7 +54,7 @@ func _physics_process(delta: float) -> void:
 				var maxAngleChange=delta * angleChangeFactor / glideSpeed
 				
 				var boost=getGlideBoostAmmount()
-				if boost!=0:print("boost:"+str(boost))
+				#if boost!=0:print("boost:"+str(boost))
 				
 				var currentStableAngle=(boost*GlideBoostAngleChangeFactor)+StableGlideAngle
 				var target_angle=clampf(currentStableAngle+(Input.get_axis("glide_up","glide_down")*HalfAngleRange),-PI/2,PI/2)
@@ -75,7 +75,7 @@ func _physics_process(delta: float) -> void:
 			if not facingRight:
 				velocity.x*=-1
 			#Debug
-			$DebugGlideSpeed.text=str(roundf(glideSpeed*100)/100)
+			#$DebugGlideSpeed.text=str(roundf(glideSpeed*100)/100)
 			#var anglePoint=Vector2.from_angle(currentStableAngle)*100
 			#if not facingRight:
 				#anglePoint.x*=-1
@@ -117,7 +117,7 @@ func _physics_process(delta: float) -> void:
 		if not hasjumped:
 			jumpTime=0.0
 		var jump=(JUMP_VELOCITY if not hasjumped and Input.is_action_just_pressed("jump") else 0.0) + (delta*JUMP_ACCEL) if jumpTime+delta<maxJumpTime else (maxJumpTime-jumpTime)*JUMP_ACCEL
-		print(jump)
+		#print(jump)
 		velocity.y=minf(velocity.y,0)+jump
 		jumpTime+=delta
 
